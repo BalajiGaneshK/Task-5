@@ -12,7 +12,6 @@ getTemperature = (country) => {
     
 // Create a new request variable for Weather data
     var request2 = new XMLHttpRequest();
-  
 //Get latitude and longitude data from argument
     let lat = country.latlng[0];
     let long = country.latlng[1];
@@ -20,19 +19,40 @@ getTemperature = (country) => {
     let apiKey = "c0e1fbd20a0db246023e19f29593c62c";  
     
     let apiCall = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + long + "&appid=" + apiKey;
-//Create a new connection for Weather data    
-
-    request2.open('GET', apiCall, true);
-
+  
+    //Create a new connection for Weather data
+    request2.open('GET', apiCall, true);  
+    
     //Send the Connection
 
     request2.send();
 
     //Registering event listener and retrieving data
-    request2.onload = () => {
-        
-        let weatherData = JSON.parse(this.response);
-        return weatherData;
+     request2.onload = () => {
+     
+       try { 
+         let weatherData = JSON.parse(request2.response);
+         let minTemp = weatherData.main.temp_min;
+       
+       
+          
+         if (weatherData === undefined)
+         {
+               throw new SyntaxError('Weather data not found');
+         }
+    
+           
+         console.log(country.name, minTemp);
+         
+        }
+         
+      
+        catch (error)
+       {
+         alert("Name:"+ error.name);
+         alert("Message:"+error.message);
+         alert("Stack:"+error.stack);
+       }
 
     }
 
@@ -58,10 +78,11 @@ request1.onload = function () {
       throw new SyntaxError('incomplete countries data');
       }
 
+    
     for (i = 0; i < countryData.length; i++)
-    console.log(countryData[i].name, getTemperature(countryData[i]));
+      getTemperature(countryData[i]);
           
-      
+    
   
   }
 
